@@ -13,11 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: node ./scripts/merge.js
-      - uses: papeloto/action-zip@v1
-        with:
-          files: icons/ js/ manifest.json
-          dest: ytdwl.zip
+      - run: mv -t out/ js/ icons/ manifest.json
       - uses: actions/upload-artifact@v2
         with:
           name: ytdwl.zip
-          path: ytdwl.zip
+          path: ./out/
