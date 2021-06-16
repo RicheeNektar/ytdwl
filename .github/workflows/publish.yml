@@ -16,5 +16,5 @@ jobs:
       - run: mkdir out/ && mv -t out/ js/ icons/ manifest.json
       - uses: actions/upload-artifact@v2
         with:
-          name: ytdwl.zip
+          name: ytdwl
           path: ./out/
