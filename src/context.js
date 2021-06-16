@@ -33,7 +33,7 @@ async function handleContextOnClicked(info, tab) {
 
     if (videoInfo && !videoInfo.total) {
       if (titles[videoId]) {
-        let worker = new Worker('src/worker.js', {
+        let worker = new Worker('js/worker.js', {
           type: 'module',
         });
 
