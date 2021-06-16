@@ -15,7 +15,7 @@ jobs:
       - run: node ./scripts/merge.js
       - uses: papeloto/action-zip@v1
         with:
-          files: manifest.json icons/ js/
+          files: icons/ js/ manifest.json
           dest: ytdwl.zip
       - uses: actions/upload-artifact@v2
         with:
