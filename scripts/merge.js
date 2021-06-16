@@ -1,10 +1,26 @@
-import { fs } from 'fs';
-import { background } from '../../ytdwl/manifest.json';
+const fs = require('fs');
 
-const out = "src.js";
+const mergeFiles = (outFile, files) => {
+  if (!fs.existsSync("out")) {
+    fs.mkdirSync("out");
+  }
 
-background.scripts.forEach(script => {
-    
-});
+  const stream = fs.createWriteStream(`out/${outFile}`);
 
-console.log(fs);
+  files.forEach(file => {
+    const bytes = fs.readFileSync(file);
+    stream.write(`// ${file}\n\n`);
+    stream.write(bytes);
+    stream.write('\n// END OF FILE\n');
+  });
+
+  stream.close();
+}
+
+mergeFiles('src.js', [
+    "src/util.js",
+    "src/worker-communication.js",
+    "src/webRequest.js",
+    "src/context.js",
+    "src/runtime.js"
+]);
