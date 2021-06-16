@@ -7,13 +7,13 @@ const buffer = 1024 * 1024;
 let streamLink;
 let total;
 
-let current = 0;
-let blobs = [];
-let index = 0;
-let videoId = null;
-let url = null;
 let isAudio = false;
-let mime = null;
+let videoId = null;
+let current = 0;
+let blobs   = [];
+let index   = 0;
+let mime    = null;
+let url     = null;
 
 xhr.responseType = 'blob';
 xhr.onreadystatechange = () => {
@@ -50,7 +50,7 @@ async function download() {
   });
 }
 
-onmessage = (event) => {
+onmessage = event => {
   let data = event.data;
 
   if (data.action === 'start' && data.info && data.videoId) {

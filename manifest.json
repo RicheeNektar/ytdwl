@@ -1,34 +1,30 @@
 {
   "name": "YTDwl",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Download youtube Audio",
-  "manifest_version": 2,
-  "content_security_policy": "script-src 'self' https://unpkg.com; object-src 'self'",
+  "manifest_version": 3,
 
   "background": {
-    "scripts": [
-      "src/util.js",
-      "src/worker-communication.js",
-      "src/webRequest.js",
-      "src/context.js",
-      "src/runtime.js"
-    ]
+    "service_worker": "src.js"
   },
 
   "content_scripts": [
     {
-      "js": ["content_scripts/title.js"],
+      "js": ["content.js"],
       "matches": ["*://*.youtube.com/watch?*"]
     }
   ],
 
   "permissions": [
-    "*://*.youtube.com/*",
-    "*://*.googlevideo.com/videoplayback?*",
-    "webRequest",
-    "tabs",
+    "declarativeNetRequestFeedback",
+    "declarativeNetRequest",
     "contextMenus",
-    "downloads"
+    "webRequest",
+    "downloads",
+    "scripting",
+    "tabs",
+    "*://*.youtube.com/*",
+    "*://*.googlevideo.com/videoplayback?*"
   ],
 
   "icons": {
