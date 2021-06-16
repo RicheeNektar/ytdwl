@@ -17,4 +17,7 @@ jobs:
         with:
           files: manifest.json icons/ js/
           dest: ytdwl.zip
-
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ytdwl.zip
+          path: ytdwl.zip
