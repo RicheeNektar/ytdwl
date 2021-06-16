@@ -1,0 +1,18 @@
+name: Zip
+
+on:
+  - pull_request: [ master ]
+  - push: [ master ]
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    name: Pack files
+    steps:
+      - uses: actions/checkout@v2
+      - run: node ./scripts/merge.js
+      - uses: papeloto/action-zip@v1
+        with:
+          files: manifest.json icons/ js/
+          dest: ytdwl.zip
+
