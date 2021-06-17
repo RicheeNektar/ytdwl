@@ -1,12 +1,12 @@
 browser.webRequest.onBeforeRequest.addListener(
-  (info) => {
+  info => {
     if (info.initiator.match(/https?:\/\/(?:www|m)\.youtube\.com/)) {
-      browser.tabs.get(info.tabId, (tab) => {
+      browser.tabs.get(info.tabId, tab => {
         if (tab.url.includes('youtube.com')) {
           let videoId = getIDFromVid(tab.url);
           let stream = info.url.split('&range')[0];
 
-          const v = videos[videoId] ?? { tab: info.tabId, };
+          const v = videos[videoId] ?? { tab: info.tabId };
 
           if (v?.audio !== stream && v?.video !== stream) {
             if (info.url.includes('audio')) {

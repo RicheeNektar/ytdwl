@@ -10,23 +10,23 @@ let total;
 let mime;
 let url;
 
-let isAudio   = false;
-let current   = 0;
-let tabId     = 0;
-let index     = 0;
-let blobs     = [];
+let isAudio = false;
+let current = 0;
+let tabId = 0;
+let index = 0;
+let blobs = [];
 
 const reset = () => {
   streamLink = null;
-  isAudio    = false;
-  videoId    = null;
-  current    = 0;
-  tabId      = 0;
-  total      = 0;
-  blobs      = [];
-  index      = 0;
-  mime       = null;
-  url        = null;
+  isAudio = false;
+  videoId = null;
+  current = 0;
+  tabId = 0;
+  total = 0;
+  blobs = [];
+  index = 0;
+  mime = null;
+  url = null;
 };
 
 xhr.responseType = 'blob';
@@ -44,7 +44,7 @@ xhr.onreadystatechange = () => {
   }
 };
 
-const download = (resolve) => {
+const download = resolve => {
   while (current < total) {
     xhr.open(
       'GET',
@@ -71,7 +71,10 @@ onmessage = event => {
     streamLink = isAudio ? info.audio : info.video;
 
     mime = streamLink.match(/&mime=(audio|video)%2F.*?&/)[0].split('=')[1];
-    mime = mime.substring(0, mime.length - 1).split('%2F').join('/');
+    mime = mime
+      .substring(0, mime.length - 1)
+      .split('%2F')
+      .join('/');
 
     total = parseInt(streamLink.match(/clen=\d+/)[0].split('=')[1]);
 
@@ -81,15 +84,19 @@ onmessage = event => {
       tabId,
     });
 
-    new Promise(download)
-      .then(blob => postMessage({
-        status: 'complete',
-        blob,
-        tabId,
-        videoId,
-      }), status => postMessage({
-        status,
-        tabId,
-      }));
+    new Promise(download).then(
+      blob =>
+        postMessage({
+          status: 'complete',
+          blob,
+          tabId,
+          videoId,
+        }),
+      status =>
+        postMessage({
+          status,
+          tabId,
+        })
+    );
   }
 };

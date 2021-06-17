@@ -1,9 +1,9 @@
 chrome.tabs.onRemoved.addListener(tabId => {
-    const worker = tabsDownloading[tabId];
-    
-    if (worker) {
-        worker.terminate();
-    }
+  const worker = tabsDownloading[tabId];
 
-    tabsDownloading.splice(tabId);
+  if (worker) {
+    worker.terminate();
+  }
+
+  tabsDownloading.splice(tabId);
 });

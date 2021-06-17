@@ -6,19 +6,19 @@ const general = {
 browser.contextMenus.create({
   id: CONTEXT_DOWNLOAD_AUDIO,
   title: 'Download Audio',
-  ...general
+  ...general,
 });
 
 browser.contextMenus.create({
   id: CONTEXT_DOWNLOAD_VIDEO,
   title: 'Download Video',
-  ...general
+  ...general,
 });
 
 browser.contextMenus.create({
   id: CONTEXT_DOWNLOAD_CANCEL,
   title: 'Cancel Download',
-  ...general
+  ...general,
 });
 
 async function handleContextOnClicked(info, tab) {
@@ -35,7 +35,7 @@ async function handleContextOnClicked(info, tab) {
         file: 'js/content.js',
       });
 
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 1000));
     }
 
     let worker = tabsDownloading[tab.id];
@@ -58,7 +58,6 @@ async function handleContextOnClicked(info, tab) {
         browser.tabs.sendMessage(tab.id, {
           type: 'dwlclear',
         });
-
       } else {
         if (isTabDownloading) {
           chrome.tabs.executeScript(tab.id, {

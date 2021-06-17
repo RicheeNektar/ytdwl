@@ -1,4 +1,4 @@
-const workerCommunication = (event) => {
+const workerCommunication = event => {
   let data = event.data;
   let worker = tabsDownloading[data.tabId];
 
@@ -6,7 +6,6 @@ const workerCommunication = (event) => {
     let total = data.total;
     worker.total = total;
     worker.active = true;
-
   } else if (data.status === 'downloading') {
     let received = data.received;
 
@@ -30,7 +29,7 @@ const workerCommunication = (event) => {
         url: data.blob,
         filename: `${videoTitle}.x`,
       },
-      (downloadId) => {
+      downloadId => {
         worker.downloadId = downloadId;
       }
     );

@@ -11,12 +11,12 @@ const mergeFiles = (outFile, files) => {
   });
 
   stream.close();
-}
+};
 
 mergeFiles('src.js', [
-    'src/util.js',
-    'src/worker-communication.js',
-    'src/webRequest.js',
-    'src/context.js',
-    'src/runtime.js'
+  'src/util.js',
+  'src/worker-communication.js',
+  'src/webRequest.js',
+  'src/context.js',
+  'src/runtime.js',
 ]);
