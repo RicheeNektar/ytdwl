@@ -1,19 +1,17 @@
+const tabsDownloading = [];
 const videos = {};
 const titles = {};
 
 
 const CONTEXT_DOWNLOAD_VIDEO = 'downloadVideo';
 const CONTEXT_DOWNLOAD_AUDIO = 'downloadAudio';
+const CONTEXT_DOWNLOAD_CANCEL = 'downloadCancel';
 
 
 if (typeof browser === "undefined") {
   var browser = chrome;
 }
 
-const extensionUrl = (() => {
-  const extensionUrl = browser.runtime.getURL("");
-  return extensionUrl.substring(0, extensionUrl.length - 1);
-})();
 
 function getIDFromVid(vidurl) {
   let arguments = vidurl.split("?")[1].split("&");
@@ -28,9 +26,9 @@ function getIDFromVid(vidurl) {
   return "";
 }
 
-function getkeyByDownloadId(downloadId) {
-  for (let prop in videos) {
-    if (videos[prop].downloadId === downloadId) {
+function getWorkerByDownloadId(downloadId) {
+  for (let prop in tabsDownloading) {
+    if (tabsDownloading[prop].downloadId === downloadId) {
       return prop;
     }
   }

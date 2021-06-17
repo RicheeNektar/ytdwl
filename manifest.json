@@ -10,7 +10,8 @@
       "src/worker-communication.js",
       "src/webRequest.js",
       "src/context.js",
-      "src/runtime.js"
+      "src/runtime.js",
+      "src/tabs.js"
     ]
   },
 

@@ -1,83 +1,40 @@
 const workerCommunication = (event) => {
   let data = event.data;
-  let videoId = data.videoId;
-  let videoInfo = videos[videoId];
+  let worker = tabsDownloading[data.tabId];
 
   if (data.status === 'init') {
     let total = data.total;
+    worker.total = total;
+    worker.active = true;
 
-    videos[videoId] = {
-      ...videoInfo,
-      total,
-    };
   } else if (data.status === 'downloading') {
     let received = data.received;
 
-    browser.tabs.sendMessage(videoInfo.tab, {
+    browser.tabs.sendMessage(data.tabId, {
       type: 'dwlupdate',
       isAudio: data.isAudio,
-      bytesTotal: videoInfo.total,
+      bytesTotal: worker.total,
       bytesReceived: received,
     });
 
-    videos[videoId] = {
-      ...videoInfo,
-      received,
-    };
+    worker.received = received;
   } else if (data.status === 'complete') {
-    let videoTitle = titles[videoId];
+    let videoTitle = titles[data.videoId];
 
-    browser.tabs.sendMessage(videoInfo.tab, {
+    browser.tabs.sendMessage(data.tabId, {
       type: 'dwlclear',
     });
 
     browser.downloads.download(
       {
         url: data.blob,
-        filename: `${videoTitle}.m4a`,
+        filename: `${videoTitle}.x`,
       },
       (downloadId) => {
-        videos[videoId] = {
-          ...videoInfo,
-          downloadId,
-        };
+        worker.downloadId = downloadId;
       }
     );
+
+    worker.active = false;
   }
 };
-
-browser.downloads.onChanged.addListener((event) => {
-  if (event.state) {
-    if (event.state.current === 'complete') {
-      let downloadId = event.id;
-      let videoId = getkeyByDownloadId(downloadId);
-      let videoInfo = videos[videoId];
-
-      videos[videoId] = {
-        audio: videoInfo.audio,
-        video: videoInfo.video,
-        tab: videoInfo.tab,
-      };
-    }
-  }
-});
-
-browser.extension.onRequest.addListener((request, sender, response) => {
-  if (sender.tab.url.startsWith(extensionUrl)) {
-    if (request.action && request.action === 'videoStates') {
-      const data = {};
-
-      for (const videoId in videos) {
-        const videoInfo = videos[videoId];
-
-        data[videoId] = {
-          received: videoInfo.received,
-          total: videoInfo.total,
-          title: titles[videoId],
-        };
-      }
-
-      response(data);
-    }
-  }
-});

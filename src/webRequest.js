@@ -6,21 +6,17 @@ browser.webRequest.onBeforeRequest.addListener(
           let videoId = getIDFromVid(tab.url);
           let stream = info.url.split('&range')[0];
 
-          const v = videos[videoId] ?? { tab: info.tabId };
+          const v = videos[videoId] ?? { tab: info.tabId, };
 
           if (v?.audio !== stream && v?.video !== stream) {
             if (info.url.includes('audio')) {
-              videos[videoId] = {
-                ...v,
-                audio: stream,
-              };
+              v.audio = stream;
             } else if (info.url.includes('video')) {
-              videos[videoId] = {
-                ...v,
-                video: stream,
-              };
+              v.video = stream;
             }
           }
+
+          videos[videoId] = v;
         }
       });
     }

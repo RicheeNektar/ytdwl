@@ -1,18 +1,25 @@
+const general = {
+  contexts: ['all'],
+  documentUrlPatterns: ['*://*.youtube.com/watch?*'],
+};
+
 browser.contextMenus.create({
   id: CONTEXT_DOWNLOAD_AUDIO,
   title: 'Download Audio',
-  contexts: ['all'],
-  documentUrlPatterns: ['*://*.youtube.com/watch?*'],
+  ...general
 });
 
 browser.contextMenus.create({
   id: CONTEXT_DOWNLOAD_VIDEO,
   title: 'Download Video',
-  contexts: ['all'],
-  documentUrlPatterns: ['*://*.youtube.com/watch?*'],
+  ...general
 });
 
-let workersStarted = 0;
+browser.contextMenus.create({
+  id: CONTEXT_DOWNLOAD_CANCEL,
+  title: 'Cancel Download',
+  ...general
+});
 
 async function handleContextOnClicked(info, tab) {
   if (
@@ -25,30 +32,52 @@ async function handleContextOnClicked(info, tab) {
 
     if (!titles[videoId]) {
       browser.tabs.executeScript(tab.id, {
-        file: 'content_scripts/title.js',
+        file: 'js/content.js',
       });
 
       await new Promise((r) => setTimeout(r, 1000));
     }
 
-    if (videoInfo && !videoInfo.total) {
-      if (titles[videoId]) {
-        let worker = new Worker('js/worker.js', {
-          type: 'module',
+    let worker = tabsDownloading[tab.id];
+    if (!worker) {
+      worker = new Worker('js/worker.js');
+
+      worker.active = false;
+      worker.onmessage = workerCommunication;
+
+      tabsDownloading[tab.id] = worker;
+    }
+
+    if (videoInfo) {
+      const isTabDownloading = worker.active;
+
+      if (info.menuItemId === CONTEXT_DOWNLOAD_CANCEL && isTabDownloading) {
+        worker.terminate();
+        tabsDownloading.splice(tab.id);
+
+        browser.tabs.sendMessage(tab.id, {
+          type: 'dwlclear',
         });
 
-        worker.onmessage = workerCommunication;
-        worker.postMessage({
-          action: 'start',
-          videoId,
-          info: videoInfo,
-          part: info.menuItemId,
-        });
       } else {
-        browser.tabs.reload(tab.id);
+        if (isTabDownloading) {
+          chrome.tabs.executeScript(tab.id, {
+            code: 'alert("A download is already running in this tab.")',
+          });
+        } else {
+          if (titles[videoId]) {
+            worker.postMessage({
+              action: 'start',
+              part: info.menuItemId,
+              info: videoInfo,
+              tabId: tab.id,
+              videoId,
+            });
+          } else {
+            browser.tabs.reload(tab.id);
+          }
+        }
       }
-    } else {
-      alert("A download is already running in this tab.");
     }
   }
 }

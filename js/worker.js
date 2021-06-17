@@ -5,15 +5,29 @@ const xhr = new XMLHttpRequest();
 const buffer = 1024 * 1024;
 
 let streamLink;
+let videoId;
 let total;
+let mime;
+let url;
 
-let isAudio = false;
-let videoId = null;
-let current = 0;
-let blobs   = [];
-let index   = 0;
-let mime    = null;
-let url     = null;
+let isAudio   = false;
+let current   = 0;
+let tabId     = 0;
+let index     = 0;
+let blobs     = [];
+
+const reset = () => {
+  streamLink = null;
+  isAudio    = false;
+  videoId    = null;
+  current    = 0;
+  tabId      = 0;
+  total      = 0;
+  blobs      = [];
+  index      = 0;
+  mime       = null;
+  url        = null;
+};
 
 xhr.responseType = 'blob';
 xhr.onreadystatechange = () => {
@@ -24,13 +38,13 @@ xhr.onreadystatechange = () => {
     postMessage({
       status: 'downloading',
       received: current,
-      videoId,
+      tabId,
       isAudio,
     });
   }
 };
 
-async function download() {
+const download = (resolve) => {
   while (current < total) {
     xhr.open(
       'GET',
@@ -40,22 +54,18 @@ async function download() {
     xhr.send();
   }
 
-  blobs = new Blob(blobs, { type: mime });
-  url = URL.createObjectURL(blobs);
-
-  postMessage({
-    status: 'complete',
-    blob: url,
-    videoId,
-  });
-}
+  resolve(URL.createObjectURL(new Blob(blobs, { type: mime })));
+};
 
 onmessage = event => {
   let data = event.data;
 
   if (data.action === 'start' && data.info && data.videoId) {
+    reset();
+
     let info = data.info;
     videoId = data.videoId;
+    tabId = data.tabId;
 
     isAudio = data.part === CONTEXT_DOWNLOAD_AUDIO;
     streamLink = isAudio ? info.audio : info.video;
@@ -68,9 +78,18 @@ onmessage = event => {
     postMessage({
       status: 'init',
       total,
-      videoId,
+      tabId,
     });
 
-    download();
+    new Promise(download)
+      .then(blob => postMessage({
+        status: 'complete',
+        blob,
+        tabId,
+        videoId,
+      }), status => postMessage({
+        status,
+        tabId,
+      }));
   }
 };
