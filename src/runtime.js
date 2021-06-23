@@ -1,15 +1,50 @@
-browser.runtime.onMessage.addListener((message, _, ok) => {
-  console.log(message);
-  if (message[0] === 'title') {
-    let uri = message[1];
+browser.runtime.onMessage.addListener((data, _, response) => {
+  if (data.type) {
+    if (data.type === 'get_active_downloads') {
+      const downloads = [];
 
-    if (uri.includes('v=')) {
-      let videoId = getIDFromVid(uri);
+      Object.keys(tabsDownloading).forEach(id =>
+        downloads.push({
+          tabId: parseInt(id),
+          ...tabsDownloading[id],
+        })
+      );
 
-      if (!titles[videoId]) {
-        titles[videoId] = message[2];
-        ok();
+      response(
+        downloads.map(download => ({
+          title: titles[download.videoId],
+          received: download.received,
+          isAudio: download.isAudio,
+          videoId: download.videoId,
+          active: download.active,
+          length: download.total,
+          tabId: download.tabId,
+        }))
+      );
+    } else if (data.type === 'update_title') {
+      const uri = data.search;
+
+      if (uri.includes('v=')) {
+        const videoId = getIDFromVid(uri);
+
+        if (!titles[videoId]) {
+          titles[videoId] = data.title;
+          response();
+        }
       }
+    } else if (data.type === 'highlight_tab') {
+      browser.tabs.query(
+        {
+          currentWindow: true,
+        },
+        tabs => {
+          const tab = tabs.find(tab => tab.id === data.tabId);
+          browser.tabs.highlight({
+            tabs: tab.index,
+            windowId: tab.windowId,
+          });
+        }
+      );
     }
   }
 });

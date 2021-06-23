@@ -10,7 +10,7 @@ const workerCommunication = event => {
     let received = data.received;
 
     browser.tabs.sendMessage(data.tabId, {
-      type: 'dwlupdate',
+      type: 'update_yt_progress',
       isAudio: data.isAudio,
       bytesTotal: worker.total,
       bytesReceived: received,
@@ -21,7 +21,7 @@ const workerCommunication = event => {
     let videoTitle = titles[data.videoId];
 
     browser.tabs.sendMessage(data.tabId, {
-      type: 'dwlclear',
+      type: 'clear_yt_progress',
     });
 
     browser.downloads.download(

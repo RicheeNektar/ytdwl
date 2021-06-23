@@ -19,12 +19,12 @@ const renderStyle = (isAudio, progress) =>
 browser.runtime.onMessage.addListener(msg => {
   const type = msg.type;
 
-  if (type === 'dwlupdate') {
+  if (type === 'update_yt_progress') {
     titleElement.style.background = renderStyle(
       msg.isAudio,
       msg.bytesReceived / msg.bytesTotal
     );
-  } else if (type === 'dwlclear') {
+  } else if (type === 'clear_yt_progress') {
     titleElement.style.background = '';
   }
 });
@@ -51,8 +51,12 @@ setInterval(() => {
         if (previousTitle !== title) {
           try {
             browser.runtime.sendMessage(
-              browser.runtime.id,
-              ['title', window.location.search, title],
+              null,
+              {
+                type: 'update_title',
+                search: window.location.search,
+                title,
+              },
               () => {
                 previousTitle = title;
               }

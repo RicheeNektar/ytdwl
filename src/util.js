@@ -1,4 +1,4 @@
-const tabsDownloading = [];
+const tabsDownloading = {};
 const videos = {};
 const titles = {};
 
@@ -6,6 +6,7 @@ const titles = {};
 const CONTEXT_DOWNLOAD_VIDEO = 'downloadVideo';
 const CONTEXT_DOWNLOAD_AUDIO = 'downloadAudio';
 const CONTEXT_DOWNLOAD_CANCEL = 'downloadCancel';
+const CONTEXT_OPEN_DOWNLOADS = 'downloadOpenDownloads';
 
 
 if (typeof browser === "undefined") {
@@ -32,4 +33,10 @@ function getWorkerByDownloadId(downloadId) {
       return prop;
     }
   }
+}
+
+function openPage(page) {
+  browser.tabs.create({
+    url: browser.runtime.getURL(page),
+  });
 }
