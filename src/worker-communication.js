@@ -35,5 +35,7 @@ const workerCommunication = event => {
     );
 
     worker.active = false;
+  } else if (data.status === 'stream_link_changed') {
+    videos[data.videoId][data.isAudio ? 'audio' : 'video'] = data.new_sream_link;
   }
 };

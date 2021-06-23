@@ -32,15 +32,28 @@ const reset = () => {
 xhr.responseType = 'blob';
 xhr.onreadystatechange = () => {
   if (xhr.readyState === 4) {
-    blobs[index++] = xhr.response;
-    current += xhr.response.size;
+    if (xhr.getResponseHeader('Content-Type') === 'text/plain') {
+      streamLink = xhr.responseText;
 
-    postMessage({
-      status: 'downloading',
-      received: current,
-      tabId,
-      isAudio,
-    });
+      postMessage({
+        status: 'stream_link_changed',
+        tabId,
+        isAudio,
+        videoId,
+        new_stream_link: xhr.responseText,
+      })
+
+    } else {
+      blobs[index++] = xhr.response;
+      current += xhr.response.size;
+
+      postMessage({
+        status: 'downloading',
+        received: current,
+        tabId,
+        isAudio,
+      });
+    }
   }
 };
 
