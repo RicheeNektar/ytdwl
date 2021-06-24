@@ -5,5 +5,5 @@ chrome.tabs.onRemoved.addListener(tabId => {
     worker.terminate();
   }
 
-  tabsDownloading.splice(tabId);
+  delete tabsDownloading[tabId];
 });

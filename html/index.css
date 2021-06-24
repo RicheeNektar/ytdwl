@@ -1,0 +1,111 @@
+body {
+  background: #666;
+  color: #ccc;
+}
+
+img.header-logo {
+  display: block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header-content {
+  text-align: center;
+}
+
+.overview-content {
+  background: #777;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  position: relative;
+  min-width: 350px;
+  width: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.overview-list-item:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.overview-list-item:not(:last-child) {
+  margin-bottom: 0.4rem;
+}
+
+.overview-list-item:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.overview-list-item {
+  cursor: pointer;
+  height: 76px;
+  padding: 0.5rem;
+  background-color: #555;
+  box-shadow: 2px 2px 3px #333;
+  user-select: none;
+}
+
+.overview-list-item:hover {
+  background-color: #5a5a5a;
+}
+
+.overview-list-item:active {
+  background-color: #505050;
+}
+
+.overview-list-item-content {
+  display: flex;
+  width: 100%;
+  font-size: 10px;
+}
+
+.overview-list-item-progress {
+  margin-top: 0.15rem;
+  height: 8px;
+  width: 100%;
+  background: #666;
+  border-radius: 10px;
+}
+
+.overview-list-item-progress-bar {
+  display: block;
+  position: relative;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: inset 0 0 4px #333;
+  margin-bottom: 5px;
+  transition: ease-out 0.1s;
+}
+
+.overview-list-item-content-tab-id {
+  position: fixed;
+  display: block;
+  float: right;
+  font-size: 8px;
+  width: 12px;
+  text-align: center;
+  background: #777;
+  border-radius: 100%;
+}
+
+.overview-list-item-content-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-left: 0.5rem;
+}
+
+.overview-list-item-content-thumbnail {
+  border-radius: 10px;
+  max-height: 64px;
+}
+
+img#maxresdefault {
+  height: 100%;
+  width: auto;
+  aspect-ratio: 16/9;
+}

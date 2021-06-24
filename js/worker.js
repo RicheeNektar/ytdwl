@@ -10,6 +10,7 @@ let total;
 let mime;
 let url;
 
+let isFinished = false;
 let isAudio = false;
 let current = 0;
 let tabId = 0;
@@ -33,7 +34,7 @@ xhr.responseType = 'blob';
 xhr.onreadystatechange = () => {
   if (xhr.readyState === 4) {
     if (xhr.getResponseHeader('Content-Type') === 'text/plain') {
-      streamLink = xhr.responseText;
+      streamLink = xhr.response.text();
 
       postMessage({
         status: 'stream_link_changed',
@@ -57,8 +58,8 @@ xhr.onreadystatechange = () => {
   }
 };
 
-const download = resolve => {
-  while (current < total) {
+async function download() {
+  while (current < total && !isFinished) {
     xhr.open(
       'GET',
       streamLink + `&range=${current}-${current + buffer}`,
@@ -67,8 +68,14 @@ const download = resolve => {
     xhr.send();
   }
 
-  resolve(URL.createObjectURL(new Blob(blobs, { type: mime })));
-};
+  isFinished = true;
+  postMessage({
+    status: 'complete',
+    blob: URL.createObjectURL(new Blob(blobs, { type: mime })),
+    tabId,
+    videoId,
+  });
+}
 
 onmessage = event => {
   let data = event.data;
@@ -79,8 +86,8 @@ onmessage = event => {
     let info = data.info;
     videoId = data.videoId;
     tabId = data.tabId;
-
-    isAudio = data.part === CONTEXT_DOWNLOAD_AUDIO;
+    isAudio = data.isAudio;
+    
     streamLink = isAudio ? info.audio : info.video;
 
     mime = streamLink.match(/&mime=(audio|video)%2F.*?&/)[0].split('=')[1];
@@ -96,20 +103,8 @@ onmessage = event => {
       total,
       tabId,
     });
+    isFinished = false;
 
-    new Promise(download).then(
-      blob =>
-        postMessage({
-          status: 'complete',
-          blob,
-          tabId,
-          videoId,
-        }),
-      status =>
-        postMessage({
-          status,
-          tabId,
-        })
-    );
+    download();
   }
 };
