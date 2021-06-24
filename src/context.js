@@ -1,6 +1,6 @@
 const generalize = props => ({
   ...props,
-  contexts: ['all'],
+  contexts: ['page'],
   documentUrlPatterns: ['*://*.youtube.com/watch?*'],
 });
 
@@ -28,7 +28,7 @@ browser.contextMenus.create(
 browser.contextMenus.create({
   id: CONTEXT_OPEN_DOWNLOADS,
   title: 'View downloads',
-  contexts: ['all'],
+  contexts: ['page_action'],
   onclick: () => {
     openPage('html/index.html');
   },
@@ -66,7 +66,7 @@ async function handleContextOnClicked(info, tab) {
         tabsDownloading[tab.id] = worker;
       }
 
-      if (videoInfo) {
+      if (videoInfo && videoInfo.audio && videoInfo.video) {
         const isTabDownloading = worker.active;
 
         if (info.menuItemId === CONTEXT_DOWNLOAD_CANCEL && isTabDownloading) {

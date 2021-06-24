@@ -34,7 +34,7 @@ xhr.responseType = 'blob';
 xhr.onreadystatechange = () => {
   if (xhr.readyState === 4) {
     if (xhr.getResponseHeader('Content-Type') === 'text/plain') {
-      streamLink = xhr.responseText;
+      streamLink = xhr.response.text();
 
       postMessage({
         status: 'stream_link_changed',

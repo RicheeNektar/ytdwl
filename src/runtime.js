@@ -3,12 +3,17 @@ browser.runtime.onMessage.addListener((data, _, response) => {
     if (data.type === 'get_active_downloads') {
       const downloads = [];
 
-      Object.keys(tabsDownloading).forEach(id =>
-        downloads.push({
-          tabId: parseInt(id),
-          ...tabsDownloading[id],
-        })
-      );
+      Object.keys(tabsDownloading)
+      .forEach(id => {
+        const info = tabsDownloading[id];
+
+        if (info.videoId && info.total && info.received) {
+          downloads.push({
+            tabId: parseInt(id),
+            ...info,
+          });
+        }
+      });
 
       response(
         downloads.map(download => ({
@@ -16,7 +21,6 @@ browser.runtime.onMessage.addListener((data, _, response) => {
           received: download.received,
           isAudio: download.isAudio,
           videoId: download.videoId,
-          active: download.active,
           length: download.total,
           tabId: download.tabId,
         }))
