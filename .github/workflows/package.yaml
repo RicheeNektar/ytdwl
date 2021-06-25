@@ -28,7 +28,6 @@ jobs:
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          allowUpdates: true
           artifacts: "ytdwl.zip"
           tag: ${{ steps.version_tag.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
