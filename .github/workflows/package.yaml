@@ -15,11 +15,11 @@ jobs:
       - name: Copy files into separate directory
         run: mkdir ytdwl && cp -vr manifest.json src/ js/ icons/ html/ ytdwl/
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Package to zip
+        uses: papeloto/action-zip@v1
         with:
-          name: ytdwl
-          path: ytdwl/
+          files: ytdwl/
+          dest: ytdwl.zip
         
       - name: Get tag name
         run: echo "::set-output name=version::$(node ./scripts/get-tag.js)"
@@ -29,6 +29,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: "ytdwl"
+          artifacts: "ytdwl.zip"
           tag: ${{ steps.version_tag.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
