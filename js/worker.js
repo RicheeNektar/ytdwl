@@ -31,18 +31,20 @@ const reset = () => {
 };
 
 xhr.responseType = 'blob';
-xhr.onreadystatechange = () => {
+xhr.onreadystatechange = async () => {
   if (xhr.readyState === 4) {
-    if (xhr.getResponseHeader('Content-Type') === 'text/plain') {
-      streamLink = xhr.response.text();
+    const content = xhr.getResponseHeader('Content-Type');
+    
+    if (content === 'text/plain') {
+      streamLink = await xhr.response.text();
 
       postMessage({
         status: 'stream_link_changed',
         tabId,
         isAudio,
         videoId,
-        new_stream_link: xhr.responseText,
-      })
+        new_stream_link: streamLink,
+      });
 
     } else {
       blobs[index++] = xhr.response;

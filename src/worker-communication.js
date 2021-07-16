@@ -6,6 +6,7 @@ const workerCommunication = event => {
     let total = data.total;
     worker.total = total;
     worker.active = true;
+
   } else if (data.status === 'downloading') {
     let received = data.received;
 
@@ -17,6 +18,7 @@ const workerCommunication = event => {
     });
 
     worker.received = received;
+
   } else if (data.status === 'complete') {
     let videoTitle = titles[data.videoId];
 
@@ -27,14 +29,19 @@ const workerCommunication = event => {
     browser.downloads.download(
       {
         url: data.blob,
-        filename: `${videoTitle}.x`,
+        filename: `${videoTitle.replace(/[^a-zA-Z0-9 \-.!?]/g, '-')}.x`,
       },
       downloadId => {
         worker.downloadId = downloadId;
       }
     );
 
+    if (worker.callback) {
+      worker.callback();
+    }
     worker.active = false;
+    worker.received = 0;
+
   } else if (data.status === 'stream_link_changed') {
     videos[data.videoId][data.isAudio ? 'audio' : 'video'] = data.new_sream_link;
   }

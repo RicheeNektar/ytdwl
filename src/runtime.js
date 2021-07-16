@@ -1,10 +1,43 @@
-browser.runtime.onMessage.addListener((data, _, response) => {
+browser.runtime.onMessage.addListener((data, sender, response) => {
   if (data.type) {
-    if (data.type === 'get_active_downloads') {
+    if (data.type === 'start_download') {
+      startDownload(
+        sender.tab.id,
+        data.id,
+        data.isAudio,
+        data.type === 'cancel_download'
+      ).then(
+        worker => {
+          worker.callback = () => response({ isRejected: false });
+        },
+        message => response({ isRejected: true, message })
+      );
+      return true;
+
+    } else if (data.type === 'await_video_info') {
+      new Promise(resolve => {
+        const videoId = data.id;
+        const start = new Date();
+
+        const i = setInterval(() => {
+          const end = new Date();
+
+          if (!!videos[videoId] || end.getTime() - start.getTime() > 10000) {
+            console.log(!!videos[videoId] ? 'Skipping..' : 'Received info');
+            
+            resolve();
+            clearInterval(i);
+
+          }
+        }, 200);
+      }).then(response);
+
+      return true;
+
+    } else if (data.type === 'get_active_downloads') {
       const downloads = [];
 
-      Object.keys(tabsDownloading)
-      .forEach(id => {
+      Object.keys(tabsDownloading).forEach(id => {
         const info = tabsDownloading[id];
 
         if (info.videoId && info.total && info.received) {
