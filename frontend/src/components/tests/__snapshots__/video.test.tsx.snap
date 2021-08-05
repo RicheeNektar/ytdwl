@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Video renders with progress bar 1`] = `
+<div
+  className="sc-jSFjdj kNXPLX"
+  id="test-id"
+>
+  <div
+    className="sc-gKAaRy eBOJRP"
+  >
+    <picture
+      className="sc-hKFxyN eUmrnL"
+    >
+      <source
+        srcSet="https://i.ytimg.com/vi/test-id/default.jpg"
+      />
+      <source
+        srcSet="https://i.ytimg.com/vi/test-id/hqdefault.jpg"
+      />
+      <img
+        className="sc-eCApnc kckRez"
+        loading="lazy"
+        srcSet="https://i.ytimg.com/vi/test-id/maxresdefault.jpg"
+      />
+    </picture>
+    <div
+      className="sc-iCoGMd laBOKL"
+    >
+      <span>
+        Lorem Ipsum LIVE 2021
+      </span>
+      <span>
+        Audio (.weba)
+      </span>
+    </div>
+  </div>
+  <div
+    className="sc-dlnjwi kRnArM sc-fujyAs dSZxZQ"
+  >
+    <div
+      className="sc-gtsrHT jBOcjR"
+    />
+  </div>
+</div>
+`;
+
+exports[`Video renders with switch to tab 1`] = `
+<div
+  className="sc-jSFjdj ewagkn"
+  id="test-id"
+  title="Switch to tab"
+>
+  <div
+    className="sc-gKAaRy eBOJRP"
+  >
+    <picture
+      className="sc-hKFxyN eUmrnL"
+    >
+      <source
+        srcSet="https://i.ytimg.com/vi/test-id/default.jpg"
+      />
+      <source
+        srcSet="https://i.ytimg.com/vi/test-id/hqdefault.jpg"
+      />
+      <img
+        className="sc-eCApnc kckRez"
+        loading="lazy"
+        srcSet="https://i.ytimg.com/vi/test-id/maxresdefault.jpg"
+      />
+    </picture>
+    <div
+      className="sc-iCoGMd laBOKL"
+    >
+      <span>
+        Lorem Ipsum LIVE 2021
+      </span>
+      <span>
+        Audio (.weba)
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Video renders without error 1`] = `
+<div
+  className="sc-jSFjdj kNXPLX"
+  id="test-id"
+>
+  <div
+    className="sc-gKAaRy eBOJRP"
+  >
+    <picture
+      className="sc-hKFxyN eUmrnL"
+    >
+      <source
+        srcSet="https://i.ytimg.com/vi/test-id/default.jpg"
+      />
+      <source
+        srcSet="https://i.ytimg.com/vi/test-id/hqdefault.jpg"
+      />
+      <img
+        className="sc-eCApnc kckRez"
+        loading="lazy"
+        srcSet="https://i.ytimg.com/vi/test-id/maxresdefault.jpg"
+      />
+    </picture>
+    <div
+      className="sc-iCoGMd laBOKL"
+    >
+      <span>
+        Lorem Ipsum LIVE 2021
+      </span>
+      <span>
+        Audio (.weba)
+      </span>
+    </div>
+  </div>
+</div>
+`;

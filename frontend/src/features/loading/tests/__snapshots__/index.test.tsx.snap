@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading renders content 1`] = `
+<div>
+  <p>
+    Lorem Ipsum Text
+  </p>
+</div>
+`;
+
+exports[`Loading renders loading circle 1`] = `
+<div>
+  <div
+    className="sc-bdnxRM hbdCeh"
+  />
+</div>
+`;

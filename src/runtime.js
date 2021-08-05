@@ -1,6 +1,7 @@
 browser.runtime.onMessage.addListener((data, sender, response) => {
-  if (data.type) {
-    if (data.type === 'start_download') {
+  switch (data.type) {
+    case 'start_download':
+    case 'cancel_download':
       startDownload(
         sender.tab.id,
         data.id,
@@ -14,7 +15,7 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
       );
       return true;
 
-    } else if (data.type === 'await_video_info') {
+    case 'await_video_info':
       new Promise(resolve => {
         const videoId = data.id;
         const start = new Date();
@@ -24,23 +25,26 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
 
           if (!!videos[videoId] || end.getTime() - start.getTime() > 10000) {
             console.log(!!videos[videoId] ? 'Skipping..' : 'Received info');
-            
+
             resolve();
             clearInterval(i);
-
           }
         }, 200);
       }).then(response);
 
       return true;
 
-    } else if (data.type === 'get_active_downloads') {
+    case 'get_active_downloads':
       const downloads = [];
 
       Object.keys(tabsDownloading).forEach(id => {
         const info = tabsDownloading[id];
 
-        if (info.videoId && info.total && info.received) {
+        if (
+          typeof info.videoId === 'string' &&
+          typeof info.total === 'number' &&
+          typeof info.received === 'number'
+        ) {
           downloads.push({
             tabId: parseInt(id),
             ...info,
@@ -58,7 +62,9 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
           tabId: download.tabId,
         }))
       );
-    } else if (data.type === 'update_title') {
+      break;
+
+    case 'update_title':
       const uri = data.search;
 
       if (uri.includes('v=')) {
@@ -69,7 +75,9 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
           response();
         }
       }
-    } else if (data.type === 'highlight_tab') {
+      break;
+
+    case 'highlight_tab':
       browser.tabs.query(
         {
           currentWindow: true,
@@ -82,6 +90,9 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
           });
         }
       );
-    }
+      break;
+
+    default:
+      console.error(`Unknown type: ${data.type}`);
   }
 });

@@ -1,0 +1,19 @@
+name: test
+
+on: [ push ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        working-directory: ./
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm test
