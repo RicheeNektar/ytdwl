@@ -19,7 +19,9 @@ jobs:
         run: |
           npm ci
           npm build
-          npm test
+
+      - name: Test
+        run: npm test
 
       - name: Rename build
         run: mv ./build ./html
