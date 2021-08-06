@@ -16,21 +16,21 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: |
-          npm ci
-          npm build
+        run: npm ci
 
       - name: Test
         run: npm test
 
-      - name: Rename build
-        run: mv ./build ./html
+      - name: Build frontend
+        run: npm build
+
+      - run: ls -la
         
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: html
+          path: build
 
   package:
     needs: build
@@ -40,6 +40,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build
+          path: html
+      
+      - run: ls -la
 
       - name: Copy files into separate directory
         run: mkdir ytdwl && cp -vr manifest.json src/ js/ icons/ html/ ytdwl/
