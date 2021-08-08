@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import PlaylistFetch from 'features/playlist-fetch';
 import DownloadsList from 'features/downloads-list';
-import Header from 'features/header';
+import VideoPlayer from 'features/video-player';
 
 const StyledWrapper = styled.div`
   background: #777;
@@ -20,7 +20,7 @@ const StyledDownloadsList = styled(DownloadsList)`
 
 const Home = () => (
   <StyledWrapper>
-    <Header />
+    <VideoPlayer />
     <StyledDownloadsList />
     <br />
     <PlaylistFetch />

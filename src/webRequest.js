@@ -1,6 +1,6 @@
 const getVideoIDFromTab = tab =>
   new Promise(resolve => {
-    chrome.tabs.sendMessage(
+    browser.tabs.sendMessage(
       tab.id,
       {
         type: 'get_id',
@@ -13,14 +13,12 @@ const getVideoIDFromTab = tab =>
 const updateStream = (videoId, stream) => {
   const v = videos[videoId] ?? {};
 
-  if (v?.audio !== stream && v?.video !== stream) {
-    if (stream.includes('audio')) {
-      v.audio = stream;
-    } else if (stream.includes('video')) {
-      v.video = stream;
-    }
+  if (stream.includes('audio')) {
+    v.audio = stream;
+  } else if (stream.includes('video')) {
+    v.video = stream;
   }
-
+  
   videos[videoId] = v;
 };
 

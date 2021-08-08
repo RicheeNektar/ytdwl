@@ -1,5 +1,3 @@
-var current_downloading = null;
-
 let storedDownloads = [];
 let downloadQueue = [];
 let errorQueue = [];
@@ -185,8 +183,6 @@ const processQueue = () =>
   new Promise(async (resolve, reject) => {
     const video = downloadQueue.shift();
     updatePlaylist();
-
-    current_downloading = video?.id ?? null;
 
     if (video) {
       youtube.src = `https://www.youtube.com/embed/${video.id}?mute=1&autoplay=1`;

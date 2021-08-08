@@ -98,7 +98,18 @@ onmessage = event => {
       .split('%2F')
       .join('/');
 
-    total = parseInt(streamLink.match(/clen=\d+/)[0].split('=')[1]);
+    if (isAudio) {
+      total = parseInt(streamLink.match(/clen=(\d+)/)[1]);
+    } else {
+      const xhr1 = new XMLHttpRequest();
+      xhr1.onreadystatechange = () => {
+        if (xhr1.readyState === 4) {
+          total = parseInt(xhr1.getResponseHeader('Content-Length'));
+        }
+      }
+      xhr1.open('HEAD', streamLink, false);
+      xhr1.send();
+    }
 
     postMessage({
       status: 'init',

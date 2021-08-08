@@ -68,7 +68,7 @@ function startDownload(tabId, videoId, isAudio, isCancelRequest) {
         });
       } else {
         if (isTabDownloading) {
-          chrome.tabs.executeScript(tabId, {
+          browser.tabs.executeScript(tabId, {
             code: 'alert("A download is running already in this tab.")',
           });
 
@@ -88,7 +88,7 @@ function startDownload(tabId, videoId, isAudio, isCancelRequest) {
 
             resolve(worker);
           } else {
-            browser.tabs.reload(tabId);
+            reject('no_video_title');
           }
         }
       }

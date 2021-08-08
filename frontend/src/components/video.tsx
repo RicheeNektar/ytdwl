@@ -64,7 +64,7 @@ const Video = ({
       </VideoInfoWrapper>
     </ContentWrapper>
 
-    {showProgress && progressTotal && progress && (
+    {showProgress && !!progressTotal && !!progress && (
       <StyledProgressBar
         isAudio={isAudio}
         progress={progress}

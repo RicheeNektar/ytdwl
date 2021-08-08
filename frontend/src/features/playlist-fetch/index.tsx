@@ -5,6 +5,7 @@ import Loading from 'features/loading';
 import { RoundedWrapper, Video } from 'components';
 import { AppDispatch, RootState } from 'features/redux/store';
 import { fetchVideos as fetchVideosAction } from './redux/slice';
+import { videosSelector } from './redux/selectors';
 
 const FormWrapper = styled.form`
   position: relative;
@@ -35,13 +36,13 @@ const StyledLabel = styled.label`
 
 const mapStateToProps = (state: RootState) => ({
   isFetching: state.playlist.isFetching,
-  isAudio: state.playlist.downloadingAudio,
-  videos: state.playlist.videos,
+  isAudio: state.playlist.downloadAudio,
+  videos: videosSelector(state),
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  fetchVideos: (id: string, isAudio: boolean) =>
-    dispatch(fetchVideosAction({ id, isAudio })),
+  fetchVideos: (id: string, downloadAudio: boolean) =>
+    dispatch(fetchVideosAction({ id, downloadAudio })),
 });
 
 type Props = ReturnType<typeof mapStateToProps> &
@@ -74,21 +75,21 @@ const PlaylistFetch = ({ isFetching, fetchVideos, videos, isAudio }: Props) => {
 
     if (playlistUrl && downloadAudio) {
       const id = getPlaylistId(playlistUrl.value);
-      const isAudio = downloadAudio.checked;
 
       if (id) {
-        fetchVideos(id, isAudio);
+        fetchVideos(id, downloadAudio.checked);
       }
     }
   };
 
-  const renderVideos = () => {
-    if (videos) {
-      return videos.map(video => (
-        <Video isAudio={isAudio} key={video.id} video={video} />
-      ));
-    }
-  };
+  const renderVideos = () =>
+    !videos || !videos.length ? null : (
+      <RoundedWrapper>
+        {videos.map(video => (
+          <Video isAudio={isAudio} key={video.id} video={video} />
+        ))}
+      </RoundedWrapper>
+    );
 
   return (
     <Loading isLoading={isFetching}>
@@ -123,9 +124,7 @@ const PlaylistFetch = ({ isFetching, fetchVideos, videos, isAudio }: Props) => {
         </FormField>
       </FormWrapper>
       <br />
-      <RoundedWrapper>
-        {renderVideos()}
-      </RoundedWrapper>
+      {renderVideos()}
     </Loading>
   );
 };

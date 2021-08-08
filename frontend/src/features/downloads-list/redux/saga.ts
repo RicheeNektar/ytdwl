@@ -15,7 +15,7 @@ function* fetchDownloads(): any {
 }
 
 function* DownloadsList() {
-  yield takeLatest(fetchDownloadsAction.type, fetchDownloads);
+  yield takeLatest(fetchDownloadsAction, fetchDownloads);
 }
 
 export default DownloadsList;

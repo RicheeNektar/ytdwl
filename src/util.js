@@ -19,7 +19,7 @@ function getIDFromVid(vidurl) {
 
   for (let i = 0; i < arguments.length; i++) {
     let argument = arguments[i];
-    if (argument.startsWith("v")) {
+    if (argument.startsWith('v=')) {
       return argument.split("=")[1];
     }
   }
@@ -39,4 +39,10 @@ function openPage(page) {
   browser.tabs.create({
     url: browser.runtime.getURL(page),
   });
+}
+
+function updateTitle({ id: videoId, title }) {
+  if (!titles[videoId]) {
+    titles[videoId] = title;
+  }
 }

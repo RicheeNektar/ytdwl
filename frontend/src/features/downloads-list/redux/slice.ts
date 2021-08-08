@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 type initialStateType = {
   downloads?: Download[];
   isFetching: boolean;
+  current?: number;
 };
 
 const initialState: initialStateType = {
   downloads: undefined,
   isFetching: false,
+  current: undefined,
 };
 
 const DownloadListSlice = createSlice({
@@ -20,14 +22,10 @@ const DownloadListSlice = createSlice({
       downloads: action.payload,
       isFetching: false,
     }),
-    removeFirstDownload: state => ({
-      ...state,
-      downloads: state.downloads?.slice(1),
-    }),
   },
 });
 
-export const { fetchDownloads, fetchDownloadsComplete, removeFirstDownload } =
+export const { fetchDownloads, fetchDownloadsComplete } =
   DownloadListSlice.actions;
 
 export default DownloadListSlice.reducer;

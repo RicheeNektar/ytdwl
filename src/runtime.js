@@ -24,7 +24,7 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
           const end = new Date();
 
           if (!!videos[videoId] || end.getTime() - start.getTime() > 10000) {
-            console.log(!!videos[videoId] ? 'Skipping..' : 'Received info');
+            console.log(!!videos[videoId] ? 'Received info' : 'Skipping..');
 
             resolve();
             clearInterval(i);
@@ -62,19 +62,18 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
           tabId: download.tabId,
         }))
       );
-      break;
+      return;
 
     case 'update_title':
-      const uri = data.search;
-
-      if (uri.includes('v=')) {
-        const videoId = getIDFromVid(uri);
-
-        if (!titles[videoId]) {
-          titles[videoId] = data.title;
-          response();
+      if (data.video) {
+        if (Array.isArray(data.video)) {
+          data.video.forEach(updateTitle);
+        } else {
+          // TODO: Get id from window.location.search
+          updateTitle(data);
         }
       }
+
       break;
 
     case 'highlight_tab':
@@ -93,6 +92,8 @@ browser.runtime.onMessage.addListener((data, sender, response) => {
       break;
 
     default:
-      console.error(`Unknown type: ${data.type}`);
+      console.error('Unknown message: ', data);
   }
+
+  response();
 });

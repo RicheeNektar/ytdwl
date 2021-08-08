@@ -1,13 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface stateProps {
-  downloadingAudio: boolean;
+  currentId?: string;
+  downloadAudio: boolean;
+  isDownloading: boolean;
   isFetching: boolean;
   videos?: Video[];
 }
 
 const initialState: stateProps = {
-  downloadingAudio: true,
+  currentId: undefined,
+  downloadAudio: true,
+  isDownloading: false,
   isFetching: false,
   videos: undefined,
 };
@@ -17,25 +21,51 @@ const playlistSlice = createSlice({
   initialState,
   reducers: {
     fetchVideos: (
-      state: stateProps,
-      _action: PayloadAction<{ id: string; isAudio: boolean }>
+      state,
+      _action: PayloadAction<{ id: string; downloadAudio: boolean }>
     ) => ({
       ...state,
       isFetching: true,
     }),
+
     fetchVideosCompleted: (
-      state: stateProps,
+      state,
       {
-        payload: { videos, downloadingAudio },
-      }: PayloadAction<{ videos: Video[]; downloadingAudio: boolean }>
+        payload: { videos, downloadAudio },
+      }: PayloadAction<{ videos: Video[]; downloadAudio: boolean }>
     ) => ({
       ...state,
       isFetching: false,
-      downloadingAudio,
+      isDownloading: true,
+      downloadAudio,
       videos,
+    }),
+
+    removeFirstVideo: state => ({
+      ...state,
+      videos: state.videos?.slice(1),
+    }),
+
+    setCurrentId: (
+      state,
+      { payload: currentId }: PayloadAction<string | undefined>
+    ) => ({
+      ...state,
+      currentId,
+    }),
+
+    completedDownloads: state => ({
+      ...state,
+      isDownloading: false,
     }),
   },
 });
 
-export const { fetchVideos, fetchVideosCompleted } = playlistSlice.actions;
+export const {
+  fetchVideos,
+  fetchVideosCompleted,
+  removeFirstVideo,
+  completedDownloads,
+  setCurrentId,
+} = playlistSlice.actions;
 export default playlistSlice.reducer;

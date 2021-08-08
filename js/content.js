@@ -29,7 +29,21 @@ browser.runtime.onMessage.addListener(msg => {
   }
 });
 
+const getVideoId = () => {
+  let arguments = window.location.search.substr(1).split("&");
+
+  for (let i = 0; i < arguments.length; i++) {
+    let argument = arguments[i];
+    if (argument.startsWith('v=')) {
+      return argument.split("=")[1];
+    }
+  }
+
+  return null
+}
+
 setInterval(() => {
+  console.log(previousTitle);
   let search = window.location.search;
 
   if (search.includes('v=')) {
@@ -47,14 +61,15 @@ setInterval(() => {
 
       if (title.length > 0) {
         title = title.replace(/[<>:"\/\\|?*]/g, '-');
+        const id = getVideoId();
 
-        if (previousTitle !== title) {
+        if (previousTitle !== title && id) {
           try {
             browser.runtime.sendMessage(
               null,
               {
                 type: 'update_title',
-                search: window.location.search,
+                id,
                 title,
               },
               () => {

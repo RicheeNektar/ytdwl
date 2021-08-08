@@ -30,6 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "set \"INLINE_RUNTIME_CHUNK=false\" && react-scripts build",
+    "build:dev": "rm -rf ../html/ && npm run build && mv build/ ../html/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "coverage": "react-scripts test --coverage"

@@ -5,5 +5,6 @@ enum MessageType {
   getActiveDownloads = 'get_active_downloads',
   updateTitle = 'update_title',
   highlightTab = 'highlight_tab',
+  getId = 'get_id',
 }
 export default MessageType;

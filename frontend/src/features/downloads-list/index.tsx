@@ -4,7 +4,6 @@ import { RoundedWrapper, Video } from 'components';
 import { AppDispatch, RootState } from 'features/redux/store';
 import {
   fetchDownloads as fetchDownloadsAction,
-  removeFirstDownload as removeFirstDownloadAction,
 } from './redux/slice';
 
 const mapStateToProps = (state: RootState) => ({
@@ -13,7 +12,6 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
   fetchDownloads: () => dispatch(fetchDownloadsAction()),
-  removeFirstDownload: () => dispatch(removeFirstDownloadAction()),
 });
 
 type Props = ReturnType<typeof mapStateToProps> &
@@ -21,11 +19,11 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const DownloadsList = ({ downloads, fetchDownloads }: Props) => {
   useEffect(() => {
-    const interval = setInterval(fetchDownloads, 1000);
+    const interval = setInterval(fetchDownloads, 200);
     return () => clearInterval(interval);
   });
 
-  if (!downloads) {
+  if (!downloads || !downloads.length) {
     return null;
   }
 
@@ -37,7 +35,7 @@ const DownloadsList = ({ downloads, fetchDownloads }: Props) => {
           tabId={download.tabId}
           video={{ id: download.videoId, title: download.title }}
           progress={download.received}
-          progressTotal={download.total}
+          progressTotal={download.length}
           isAudio={download.isAudio}
           showProgress
         />
