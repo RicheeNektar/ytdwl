@@ -17,7 +17,7 @@ const MessageListener = ({ store }: Props) => {
         response(currentIdSelector(store.getState()));
       }
     });
-  }, []);
+  }, [ store ]);
 
   return null;
 };
