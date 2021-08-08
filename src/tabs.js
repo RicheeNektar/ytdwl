@@ -1,4 +1,4 @@
-chrome.tabs.onRemoved.addListener(tabId => {
+browser.tabs.onRemoved.addListener(tabId => {
   const worker = tabsDownloading[tabId];
 
   if (worker) {

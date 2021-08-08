@@ -24,7 +24,7 @@
 
   "permissions": [
     "*://*.youtube.com/*",
-    "*://*.googlevideo.com/videoplayback?*",
+    "*://*/videoplayback?*",
     "webRequest",
     "tabs",
     "contextMenus",

@@ -1,25 +1,46 @@
+const getVideoIDFromTab = tab =>
+  new Promise(resolve => {
+    browser.tabs.sendMessage(
+      tab.id,
+      {
+        type: 'get_id',
+      },
+      null,
+      resolve
+    );
+  });
+
+const updateStream = (videoId, stream) => {
+  const v = videos[videoId] ?? {};
+
+  if (stream.includes('audio')) {
+    v.audio = stream;
+  } else if (stream.includes('video')) {
+    v.video = stream;
+  }
+  
+  videos[videoId] = v;
+};
+
 browser.webRequest.onBeforeRequest.addListener(
   info => {
     if (info.initiator.match(/https?:\/\/(?:www|m)\.youtube\.com/)) {
       browser.tabs.get(info.tabId, tab => {
-        if (tab.url.includes('youtube.com')) {
-          let videoId = getIDFromVid(tab.url);
-          let stream = info.url.split('&range')[0];
+        const stream = info.url.split('&range')[0];
 
-          const v = videos[videoId] ?? { tab: info.tabId };
-
-          if (v?.audio !== stream && v?.video !== stream) {
-            if (info.url.includes('audio')) {
-              v.audio = stream;
-            } else if (info.url.includes('video')) {
-              v.video = stream;
-            }
+        if (tab?.url) {
+          if (tab.url.includes('youtube.com')) {
+            updateStream(getIDFromVid(tab.url), stream);
+          } else if (tab.url.includes(browser.runtime.id)) {
+            getVideoIDFromTab(tab).then(id => {
+              if (!!id) {
+                updateStream(id, stream);
+              }
+            });
           }
-
-          videos[videoId] = v;
         }
       });
     }
   },
-  { urls: ['*://*.googlevideo.com/videoplayback?*'] }
+  { urls: ['*://*/videoplayback?*'] }
 );

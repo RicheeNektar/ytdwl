@@ -1,13 +1,50 @@
-browser.runtime.onMessage.addListener((data, _, response) => {
-  if (data.type) {
-    if (data.type === 'get_active_downloads') {
+browser.runtime.onMessage.addListener((data, sender, response) => {
+  switch (data.type) {
+    case 'start_download':
+    case 'cancel_download':
+      startDownload(
+        sender.tab.id,
+        data.id,
+        data.isAudio,
+        data.type === 'cancel_download'
+      ).then(
+        worker => {
+          worker.callback = () => response({ isRejected: false });
+        },
+        message => response({ isRejected: true, message })
+      );
+      return true;
+
+    case 'await_video_info':
+      new Promise(resolve => {
+        const videoId = data.id;
+        const start = new Date();
+
+        const i = setInterval(() => {
+          const end = new Date();
+
+          if (!!videos[videoId] || end.getTime() - start.getTime() > 10000) {
+            console.log(!!videos[videoId] ? 'Received info' : 'Skipping..');
+
+            resolve();
+            clearInterval(i);
+          }
+        }, 200);
+      }).then(response);
+
+      return true;
+
+    case 'get_active_downloads':
       const downloads = [];
 
-      Object.keys(tabsDownloading)
-      .forEach(id => {
+      Object.keys(tabsDownloading).forEach(id => {
         const info = tabsDownloading[id];
 
-        if (info.videoId && info.total && info.received) {
+        if (
+          typeof info.videoId === 'string' &&
+          typeof info.total === 'number' &&
+          typeof info.received === 'number'
+        ) {
           downloads.push({
             tabId: parseInt(id),
             ...info,
@@ -25,18 +62,21 @@ browser.runtime.onMessage.addListener((data, _, response) => {
           tabId: download.tabId,
         }))
       );
-    } else if (data.type === 'update_title') {
-      const uri = data.search;
+      return;
 
-      if (uri.includes('v=')) {
-        const videoId = getIDFromVid(uri);
-
-        if (!titles[videoId]) {
-          titles[videoId] = data.title;
-          response();
+    case 'update_title':
+      if (data.video) {
+        if (Array.isArray(data.video)) {
+          data.video.forEach(updateTitle);
+        } else {
+          // TODO: Get id from window.location.search
+          updateTitle(data);
         }
       }
-    } else if (data.type === 'highlight_tab') {
+
+      break;
+
+    case 'highlight_tab':
       browser.tabs.query(
         {
           currentWindow: true,
@@ -49,6 +89,11 @@ browser.runtime.onMessage.addListener((data, _, response) => {
           });
         }
       );
-    }
+      break;
+
+    default:
+      console.error('Unknown message: ', data);
   }
+
+  response();
 });

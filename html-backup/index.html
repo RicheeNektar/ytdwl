@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Active YouTube downloads</title>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="connect-src https://richee.me/; frame-src https://www.youtube.com/; img-src https://i.ytimg.com; default-src https://www.youtube.com https://*.googlevideo.com 'self';"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <script src="playlist.js"></script>
+    <script src="load-playlist.js"></script>
+  </head>
+  <body>
+    <div class="overview-content">
+      <div class="header-content">
+        <img class="header-logo" src="../../icons/128.png" width="96px" />
+        <h2>YouTube Downloads</h2>
+      </div>
+
+      <iframe id="youtube" src="https://www.youtube.com/embed/id?autoplay=1&mute=1"></iframe>
+
+      <div id="overview-list">
+        <!-- overview-list-items go here -->
+      </div>
+
+      <br />
+      <div>
+        <div id="fetching-playlist" class="lds-dual-ring" hidden></div>
+
+        <form id="playlist-form">
+          <div class="flex-column">
+            <label for="playlist-url">Playlist URL (Enter to start download)</label>
+            <input type="url" name="playlist-url" id="playlist-input" placeholder="https://www.youtube.com/playlist?list=..."/>
+          </div>
+          <div>
+            <div>
+              <input type="radio" name="mime-type" id="audio" checked />
+              <label for="audio">Audio</label>
+            </div>
+            <div>
+              <input type="radio" name="mime-type" id="video" />
+              <label for="video">Video</label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <br />
+
+      <div id="play-list">
+        <!-- playlist-items go here -->
+      </div>
+    </div>
+
+
+    <template id="overview-list-item">
+      <div class="list-item" id="tab-X" title="Switch to tab">
+        <div class="list-item-content">
+          <picture>
+            <source id="default" srcset="" />
+            <source id="hqdefault" srcset="" />
+            <img
+              class="list-item-content-thumbnail"
+              id="maxresdefault"
+              srcset=""
+              loading="lazy"
+            />
+          </picture>
+
+          <div class="list-item-content-info">
+            <span id="title"></span>
+            <span id="mime"></span>
+          </div>
+        </div>
+
+        <div class="list-item-progress">
+          <div
+            class="list-item-progress-bar"
+            id="progress-bar"
+          ></div>
+        </div>
+      </div>
+    </template>
+
+
+    <template id="playlist-item">
+      <div class="list-item" id="tab-X" title="Switch to tab">
+        <div class="list-item-content">
+          <picture>
+            <source id="default" srcset="" />
+            <source id="hqdefault" srcset="" />
+            <img
+              class="list-item-content-thumbnail"
+              id="maxresdefault"
+              srcset=""
+            />
+          </picture>
+
+          <div class="list-item-content-info">
+            <span id="title"></span>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script src="index.js"></script>
+    <script src="runtime.js"></script>
+  </body>
+</html>

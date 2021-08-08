@@ -1,0 +1,57 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "html/",
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.6.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.4",
+    "react-scripts": "4.0.3",
+    "redux-saga": "^1.1.3",
+    "styled-components": "^5.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "react-test-renderer": "^17.0.2",
+    "@types/jest": "^26.0.24",
+    "@types/react-test-renderer": "^17.0.1",
+    "@types/node": "^12.20.17",
+    "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-redux": "^7.1.18",
+    "@types/redux-saga": "^0.10.5",
+    "@types/styled-components": "^5.1.11",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && react-scripts build",
+    "build:dev": "rm -rf ../html/ && npm run build && mv build/ ../html/",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "coverage": "react-scripts test --coverage"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "typings": "src/types/global.d.ts"
+}

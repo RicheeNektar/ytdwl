@@ -34,6 +34,72 @@ browser.contextMenus.create({
   },
 });
 
+function startDownload(tabId, videoId, isAudio, isCancelRequest) {
+  return new Promise(async (resolve, reject) => {
+    let videoInfo = videos[videoId];
+
+    if (!titles[videoId]) {
+      browser.tabs.executeScript(tabId, {
+        file: 'js/content.js',
+      });
+
+      await new Promise(r => setTimeout(r, 1000));
+    }
+
+    let worker = tabsDownloading[tabId];
+    if (!worker) {
+      worker = new Worker('js/worker.js');
+
+      worker.active = false;
+      worker.onmessage = workerCommunication;
+
+      tabsDownloading[tabId] = worker;
+    }
+
+    if (videoInfo && videoInfo.audio && videoInfo.video) {
+      const isTabDownloading = worker.active;
+
+      if (isCancelRequest && isTabDownloading) {
+        worker.terminate();
+        delete tabsDownloading[tabId];
+
+        browser.tabs.sendMessage(tabId, {
+          type: 'clear_yt_progress',
+        });
+      } else {
+        if (isTabDownloading) {
+          browser.tabs.executeScript(tabId, {
+            code: 'alert("A download is running already in this tab.")',
+          });
+
+          reject('download_active');
+        } else {
+          if (titles[videoId]) {
+            worker.postMessage({
+              action: 'start',
+              isAudio,
+              info: videoInfo,
+              videoId,
+              tabId,
+            });
+
+            worker.videoId = videoId;
+            worker.isAudio = isAudio;
+
+            resolve(worker);
+          } else {
+            reject('no_video_title');
+          }
+        }
+      }
+    } else {
+      reject('no_video_info');
+    }
+    
+    reject('unknown');
+  });
+}
+
 async function handleContextOnClicked(info, tab) {
   if (
     tab.url.includes('watch') &&
@@ -45,62 +111,10 @@ async function handleContextOnClicked(info, tab) {
       info.menuItemId === CONTEXT_DOWNLOAD_VIDEO ||
       info.menuItemId === CONTEXT_DOWNLOAD_CANCEL
     ) {
-      let videoId = getIDFromVid(tab.url);
-      let videoInfo = videos[videoId];
+      const isAudio = info.menuItemId === CONTEXT_DOWNLOAD_AUDIO;
+      const isCancelReqeust = info.menuItemId === CONTEXT_DOWNLOAD_CANCEL;
 
-      if (!titles[videoId]) {
-        browser.tabs.executeScript(tab.id, {
-          file: 'js/content.js',
-        });
-
-        await new Promise(r => setTimeout(r, 1000));
-      }
-
-      let worker = tabsDownloading[tab.id];
-      if (!worker) {
-        worker = new Worker('js/worker.js');
-
-        worker.active = false;
-        worker.onmessage = workerCommunication;
-
-        tabsDownloading[tab.id] = worker;
-      }
-
-      if (videoInfo && videoInfo.audio && videoInfo.video) {
-        const isTabDownloading = worker.active;
-
-        if (info.menuItemId === CONTEXT_DOWNLOAD_CANCEL && isTabDownloading) {
-          worker.terminate();
-          delete tabsDownloading[tab.id];
-
-          browser.tabs.sendMessage(tab.id, {
-            type: 'clear_yt_progress',
-          });
-        } else {
-          if (isTabDownloading) {
-            chrome.tabs.executeScript(tab.id, {
-              code: 'alert("A download is already running in this tab.")',
-            });
-          } else {
-            if (titles[videoId]) {
-              const isAudio = info.menuItemId === CONTEXT_DOWNLOAD_AUDIO;
-
-              worker.postMessage({
-                action: 'start',
-                isAudio,
-                info: videoInfo,
-                tabId: tab.id,
-                videoId,
-              });
-
-              worker.videoId = videoId;
-              worker.isAudio = isAudio;
-            } else {
-              browser.tabs.reload(tab.id);
-            }
-          }
-        }
-      }
+      startDownload(tab.id, getIDFromVid(tab.url), isAudio, isCancelReqeust);
     }
   }
 }

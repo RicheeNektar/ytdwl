@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProgressBar renders audio progress bar 1`] = `
+<div
+  className="sc-dlnjwi kRnArM"
+>
+  <div
+    className="sc-gtsrHT elbIbO"
+  />
+</div>
+`;
+
+exports[`ProgressBar renders different width 1`] = `
+<div
+  className="sc-dlnjwi kRnArM"
+>
+  <div
+    className="sc-gtsrHT bpWGdq"
+  />
+</div>
+`;
+
+exports[`ProgressBar renders video progress bar 1`] = `
+<div
+  className="sc-dlnjwi kRnArM"
+>
+  <div
+    className="sc-gtsrHT bpzQSB"
+  />
+</div>
+`;
