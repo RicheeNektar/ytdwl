@@ -81,7 +81,7 @@ jobs:
       - run: ls -la
 
       - name: Copy files into separate directory
-        run: mkdir ytdwl && cp -vr manifest.json src/ js/ icons/ html/ ytdwl/
+        run: mkdir ytdwl && cp -vr public/* src/ html/ ytdwl/
 
       - run: ls -la ytdwl/
 
