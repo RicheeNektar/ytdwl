@@ -1,1 +1,1 @@
-console.log(`v${require('../manifest.json').version}`);
+console.log(`v${require('../public/manifest.json').version}`);

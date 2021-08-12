@@ -86,7 +86,7 @@ const PlaylistFetch = ({ isFetching, fetchVideos, videos, isAudio }: Props) => {
     !videos || !videos.length ? null : (
       <RoundedWrapper>
         {videos.map(video => (
-          <Video isAudio={isAudio} key={video.id} video={video} />
+          <Video isAudio={isAudio} key={video.videoId} video={video} />
         ))}
       </RoundedWrapper>
     );

@@ -6,7 +6,30 @@ on:
       - master
 
 jobs:
-  build:
+  build-extension:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ts
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build extension
+        run: npm run build
+
+      - run: ls -la
+        
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-extension
+          path: ts/out/
+
+  build-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,20 +54,28 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
-          name: build
+          name: build-frontend
           path: frontend/build/
 
   package:
-    needs: build
+    needs:
+      - build-extension
+      - build-frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Download build artifact
+      - name: Download src artifact
         uses: actions/download-artifact@v2
         with:
-          name: build
+          name: build-extension
+          path: ./src/
+
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-frontend
           path: ./html/
       
       - run: ls -la

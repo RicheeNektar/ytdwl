@@ -33,9 +33,9 @@ const DownloadsList = ({ downloads, fetchDownloads }: Props) => {
         <Video
           key={download.tabId}
           tabId={download.tabId}
-          video={{ id: download.videoId, title: download.title }}
+          video={{ videoId: download.videoId, title: download.title ?? '' }}
           progress={download.received}
-          progressTotal={download.length}
+          progressTotal={download.total}
           isAudio={download.isAudio}
           showProgress
         />

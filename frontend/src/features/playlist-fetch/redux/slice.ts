@@ -5,7 +5,7 @@ interface stateProps {
   downloadAudio: boolean;
   isDownloading: boolean;
   isFetching: boolean;
-  videos?: Video[];
+  videos?: YTDwl.Video[];
 }
 
 const initialState: stateProps = {
@@ -32,7 +32,7 @@ const playlistSlice = createSlice({
       state,
       {
         payload: { videos, downloadAudio },
-      }: PayloadAction<{ videos: Video[]; downloadAudio: boolean }>
+      }: PayloadAction<{ videos: YTDwl.Video[]; downloadAudio: boolean }>
     ) => ({
       ...state,
       isFetching: false,

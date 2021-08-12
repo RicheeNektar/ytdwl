@@ -1,8 +1,10 @@
 .vscode
 
-frontend/node_modules
+**/node_modules
+
+ts/out
 frontend/build
 frontend/coverage
 
 html/
-html-backup/
+ytdwl-build/

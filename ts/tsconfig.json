@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "baseUrl": "./ts",
+    "outDir": "./out",
+    "strict": true,
+    "allowJs": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "allowUnusedLabels": false,
+    "preserveConstEnums": true,
+    "noUnusedParameters": true,
+    "allowUmdGlobalAccess": true,
+    "allowUnreachableCode": false,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["./@types"]
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

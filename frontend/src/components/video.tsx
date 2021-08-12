@@ -33,7 +33,7 @@ type Props = {
   progress?: number;
   isAudio?: boolean;
   tabId?: number;
-  video: Video;
+  video: YTDwl.Video;
 };
 
 const defaultProps: Pick<Props, 'isAudio' | 'showProgress'> = {
@@ -47,16 +47,16 @@ const Video = ({
   progress,
   isAudio,
   tabId,
-  video: { title, id },
+  video: { title, videoId },
 }: Props) => (
   <Wrapper
     tabId={tabId}
-    key={id}
-    id={id}
+    key={videoId}
+    id={videoId}
     {...(tabId && { title: 'Switch to tab' })}
   >
     <ContentWrapper>
-      <Thumbnail videoId={id} />
+      <Thumbnail videoId={videoId} />
 
       <VideoInfoWrapper>
         <span>{title}</span>

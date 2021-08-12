@@ -12,7 +12,7 @@ if (!window.stored || !window.stored.browser) {
   window.stored = {
     tab: undefined,
     browser: {
-      sendMessage: async <T>(message: CallMessage): Promise<T | null> => {
+      sendMessage: async <T>(message: YTDwl.RuntimeMessage): Promise<T | null> => {
         console.debug('Sending message: ', message.type);
 
         return await new Promise(resolve =>
@@ -24,10 +24,10 @@ if (!window.stored || !window.stored.browser) {
       },
 
       addMessageListener: (
-        callback: (message: CallMessage, response: (p: any) => void) => void
+        callback: (message: YTDwl.RuntimeMessage, response: (p: any) => void) => void
       ) => {
         api.runtime.onMessage.addListener(
-          (message: CallMessage, _sender: any, response: (p: any) => void) => {
+          (message: YTDwl.RuntimeMessage, _sender: any, response: (p: any) => void) => {
             console.debug('Received message: ', message.type);
             callback(message, response);
           }

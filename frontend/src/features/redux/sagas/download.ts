@@ -18,16 +18,16 @@ import { RootState } from '../store';
 
 function* startDownload(isRetry = false) {
   const downloadAudio: boolean = yield select(downloadAudioSelector);
-  const videos: Video[] = yield select(videosSelector);
+  const videos: YTDwl.Video[] = yield select(videosSelector);
 
   if (videos) {
     const video = videos[0];
 
     if (video) {
-      console.log(`Starting download: ${video.id}`);
+      console.log(`Starting download: ${video.videoId}`);
 
-      yield put(setVideoId(video.id));
-      yield put(setCurrentId(video.id));
+      yield put(setVideoId(video.videoId));
+      yield put(setCurrentId(video.videoId));
 
       const hasLoaded: boolean = yield select(
         (state: RootState) => state.videoPlayer.loaded
@@ -39,18 +39,18 @@ function* startDownload(isRetry = false) {
         yield delay(1000);
       }
 
-      const response: DownloadResponse | null =
-        yield browser.sendMessage<DownloadResponse>({
+      const response: YTDwl.DownloadResponse | null =
+        yield browser.sendMessage<YTDwl.DownloadResponse>({
           type: MessageType.startDownload,
           isAudio: downloadAudio,
-          id: video.id,
+          videoId: video.videoId,
         });
 
       if (response?.isRejected) {
         if (response.message === 'no_video_info' && !isRetry) {
-          yield call(getVideoInfo, video.id);
+          yield call(getVideoInfo, video.videoId);
         } else {
-          console.error(`Download errorred with: ${response.message}`);
+          console.error(`Download errorred with: `, response.message);
           yield call(startNextDownload);
         }
       } else {
@@ -64,7 +64,7 @@ function* startDownload(isRetry = false) {
 
 function* getVideoInfo(videoId: string): Generator<any> {
   yield browser.updateOrCreateTab(getVideoUrl(videoId));
-  yield browser.sendMessage({ type: MessageType.awaitVideoInfo, id: videoId });
+  yield browser.sendMessage({ type: MessageType.awaitVideoInfo, videoId });
   yield call(startDownload, true);
 }
 

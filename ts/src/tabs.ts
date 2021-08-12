@@ -1,0 +1,1 @@
+browser.tabs.onRemoved.addListener(storage.cancelDownload);

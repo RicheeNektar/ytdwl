@@ -7,7 +7,9 @@ import {
 } from './slice';
 
 function* fetchDownloads(): any {
-  const response: Download[] = yield Browser.sendMessage<Download[]>({
+  const response: YTDwl.Download[] = yield Browser.sendMessage<
+    YTDwl.Download[]
+  >({
     type: MessageType.getActiveDownloads,
   });
 
