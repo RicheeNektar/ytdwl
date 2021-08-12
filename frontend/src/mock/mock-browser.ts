@@ -5,7 +5,7 @@ const mockBrowser = () => ({
   runtime: {
     sendMessage: (
       _a: any,
-      message: CallMessage,
+      message: YTDwl.RuntimeMessage,
       _b: any,
       response: (param1?: any) => void
     ) => {
@@ -17,7 +17,7 @@ const mockBrowser = () => ({
           break;
 
         case MessageType.startDownload:
-          const responseObject: DownloadResponse = {
+          const responseObject: YTDwl.DownloadResponse = {
             isRejected: false,
           };
 

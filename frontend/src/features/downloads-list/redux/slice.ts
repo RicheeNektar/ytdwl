@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type initialStateType = {
-  downloads?: Download[];
+  downloads?: YTDwl.Download[];
   isFetching: boolean;
   current?: number;
 };
@@ -17,7 +17,10 @@ const DownloadListSlice = createSlice({
   initialState,
   reducers: {
     fetchDownloads: _state => {},
-    fetchDownloadsComplete: (state, action: PayloadAction<Download[]>) => ({
+    fetchDownloadsComplete: (
+      state,
+      action: PayloadAction<YTDwl.Download[]>
+    ) => ({
       ...state,
       downloads: action.payload,
       isFetching: false,

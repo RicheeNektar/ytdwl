@@ -53,5 +53,5 @@
       "last 1 safari version"
     ]
   },
-  "typings": "src/types/global.d.ts"
+  "types": "@ytdwl"
 }

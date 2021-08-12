@@ -15,7 +15,7 @@ function* fetchVideos(action: fetchVideosActionType) {
     `https://richee.me/playlist/?list=${playlistId}`
   );
 
-  const videos: Video[] = yield response.json();
+  const videos: YTDwl.Video[] = yield response.json();
 
   yield getBrowser.sendMessage({
     type: MessageType.updateTitle,

@@ -3,7 +3,22 @@ name: test
 on: [ push ]
 
 jobs:
-  test:
+  test-extension:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ts
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build source
+        run: npm run build
+
+  test-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -15,5 +30,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
+      - name: Build frontend
+        run: npm run build
+
       - name: Test
         run: npm run test

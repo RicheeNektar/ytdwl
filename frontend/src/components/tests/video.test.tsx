@@ -2,8 +2,8 @@ import TestRenderer from 'react-test-renderer';
 import { Video as VideoComponent } from 'components';
 import { ComponentProps } from 'react';
 
-const video = {
-  id: 'test-id',
+const video: YTDwl.Video = {
+  videoId: 'test-id',
   title: 'Lorem Ipsum LIVE 2021',
 };
 
@@ -18,7 +18,7 @@ const standardTest = (props?: Props) => {
 
   expect(title.children.some(e => e === video.title)).toBeTruthy();
   expect(
-    component.root.findAll(e => e.props?.srcSet?.includes(video.id)).length
+    component.root.findAll(e => e.props?.srcSet?.includes(video.videoId)).length
   ).toBe(4);
 
   return component;
