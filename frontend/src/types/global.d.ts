@@ -31,3 +31,5 @@ declare global {
     updateOrCreateTab: (url: string) => Promise<void>;
   }
 }
+
+export {};
