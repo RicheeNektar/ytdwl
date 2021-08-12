@@ -1,5 +1,3 @@
-import MessageType from './browser-message-types';
-
 declare global {
   export interface Window extends any {
     stored: {
