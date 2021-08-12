@@ -19,7 +19,7 @@ function* fetchVideos(action: fetchVideosActionType) {
 
   yield getBrowser.sendMessage({
     type: MessageType.updateTitle,
-    video: videos,
+    titles: videos,
   });
   
   yield put(fetchVideosCompleted({ videos, downloadAudio }));

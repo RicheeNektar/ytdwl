@@ -1,4 +1,3 @@
-
 const workerMessageHandler = (event: MessageEvent<YTDwl.WorkerMessage>) => {
   const data = event.data;
   const tabId = data.tabId;
@@ -26,7 +25,7 @@ const workerMessageHandler = (event: MessageEvent<YTDwl.WorkerMessage>) => {
       break;
 
     case 'complete':
-      const title = storage.getTitle(download.videoId);
+      let title = storage.getTitle(download.videoId);
 
       browser.tabs.sendMessage(data.tabId, {
         type: 'clear_yt_progress',
@@ -35,9 +34,7 @@ const workerMessageHandler = (event: MessageEvent<YTDwl.WorkerMessage>) => {
       browser.downloads.download(
         {
           url: data.blob,
-          filename: `${title
-            .substr(0, 128)
-            .replace(/[^a-z0-9 \-!?]/gi, '-')}.x`,
+          filename: `${title}.x`,
         },
         downloadId =>
           storage.updateDownload(tabId, { downloadId, status: 'complete' })

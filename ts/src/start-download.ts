@@ -5,12 +5,12 @@ type Props = {
   isCancelRequest?: boolean;
 };
 
-const startDownload = async ({
+const startDownload = ({
   tabId,
   videoId,
   isAudio,
   isCancelRequest,
-}: Props) => {
+}: Props) => new Promise((resolve, reject) => {
   if (isCancelRequest) {
     storage.cancelDownload(tabId);
 
@@ -28,9 +28,11 @@ const startDownload = async ({
           code: 'alert("A download is running already in this tab.")',
         });
 
-        throw new Error('download_active');
+        reject('download_active');
       } else {
-        if (!!title) {
+        if (title) {
+          storage.updateDownload(tabId, { status: 'active' })
+
           download.worker.postMessage({
             type: 'init',
             videoId,
@@ -39,15 +41,15 @@ const startDownload = async ({
             isAudio,
           });
 
-          return true;
+          resolve(null);
         } else {
-          throw new Error('no_video_title');
+          reject('no_video_title');
         }
       }
     } else {
-      throw new Error('no_video_info');
+      reject('no_video_info');
     }
   } else {
-    throw new Error('unknown');
+    reject('no_video_id');
   }
-};
+});

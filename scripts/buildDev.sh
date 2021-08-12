@@ -1,17 +1,15 @@
-set \"INLINE_RUNTIME_CHUNK=false\"
-
 cd ./frontend
-npm run build
+npm run build:dev
 
 cd ../ts
 npm run build
 
 cd ../
 
-rm -rf ytdwl-build
-mkdir ytdwl-build
+rm -vrf ytdwl-build
+mkdir -v ytdwl-build
 
-cp -r public/* ytdwl-build/
+cp -vr public/* ytdwl-build/
 
-mv ts/out/ ytdwl-build/src
-mv frontend/build ytdwl-build/html
+mv -v ts/out/ ytdwl-build/src
+mv -v frontend/build ytdwl-build/html

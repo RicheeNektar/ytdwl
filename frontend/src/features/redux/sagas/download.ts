@@ -43,14 +43,14 @@ function* startDownload(isRetry = false) {
         yield browser.sendMessage<YTDwl.DownloadResponse>({
           type: MessageType.startDownload,
           isAudio: downloadAudio,
-          id: video.videoId,
+          videoId: video.videoId,
         });
 
       if (response?.isRejected) {
         if (response.message === 'no_video_info' && !isRetry) {
           yield call(getVideoInfo, video.videoId);
         } else {
-          console.error(`Download errorred with: ${response.message}`);
+          console.error(`Download errorred with: `, response.message);
           yield call(startNextDownload);
         }
       } else {
@@ -64,7 +64,7 @@ function* startDownload(isRetry = false) {
 
 function* getVideoInfo(videoId: string): Generator<any> {
   yield browser.updateOrCreateTab(getVideoUrl(videoId));
-  yield browser.sendMessage({ type: MessageType.awaitVideoInfo, id: videoId });
+  yield browser.sendMessage({ type: MessageType.awaitVideoInfo, videoId });
   yield call(startDownload, true);
 }
 

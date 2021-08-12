@@ -21,10 +21,13 @@ declare global {
   export type TabStatus = 'unloaded' | 'loading' | 'complete';
 
   export interface Browser {
-    sendMessage: <T>(message: CallMessage) => Promise<T | null>;
+    sendMessage: <T>(message: YTDwl.RuntimeMessage) => Promise<T | null>;
 
     addMessageListener: (
-      callback: (message: CallMessage, response: (p: any) => void) => void
+      callback: (
+        message: YTDwl.RuntimeMessage,
+        response: (p: any) => void
+      ) => void
     ) => void;
 
     updateOrCreateTab: (url: string) => Promise<void>;

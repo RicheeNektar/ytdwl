@@ -64,16 +64,23 @@ const createStore = () => {
     }) => {
       const download = storage.downloads[tabId];
 
-      if (!download && videoId) {
-        const worker = new Worker('src/worker.js');
-        worker.onmessage = workerMessageHandler;
+      if (videoId) {
+        if (!download) {
+          const worker = new Worker('src/worker.js');
+          worker.onmessage = workerMessageHandler;
 
-        return (storage.downloads[tabId] = {
-          isAudio: isAudio ?? true,
-          status: 'complete',
-          videoId,
-          worker,
-        });
+          return (storage.downloads[tabId] = {
+            isAudio: isAudio ?? true,
+            status: 'complete',
+            videoId,
+            worker,
+          });
+        } else {
+          return (storage.downloads[tabId] = {
+            ...download,
+            videoId,
+          });
+        }
       }
 
       return download;

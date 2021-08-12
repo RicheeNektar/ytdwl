@@ -23,12 +23,7 @@
     "noUnusedParameters": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "baseUrl": "src",
-    "paths": {
-      "@ytdwl": [
-        "../ts/@types/index.d.ts"
-      ]
-    }
+    "baseUrl": "src"
   },
   "include": [
     "src"

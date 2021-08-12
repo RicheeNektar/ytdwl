@@ -18,7 +18,6 @@ declare namespace YTDwl {
     title?: string;
 
     videoId: string;
-    callback?: () => void;
   }
 
   export interface Store {
@@ -94,8 +93,8 @@ declare namespace YTDwl {
         message:
           | 'no_video_title'
           | 'no_video_info'
-          | 'download_active'
-          | 'unknown';
+          | 'no_video_id'
+          | 'download_active';
       }
     | {
         isRejected: false;

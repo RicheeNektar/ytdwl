@@ -14,11 +14,7 @@ browser.runtime.onMessage.addListener(
           videoId: data.videoId,
           tabId: senderTabId,
         }).then(
-          () => {
-            storage.updateDownload(senderTabId, {
-              callback: () => response({ isRejected: false }),
-            });
-          },
+          () => response({ isRejected: false }),
           message => response({ isRejected: true, message })
         );
         return true;
@@ -57,15 +53,13 @@ browser.runtime.onMessage.addListener(
       case RuntimeMessageType.updateTitle:
         const { videoId, title, titles } = data;
 
-        if (videoId) {
-          if (titles) {
-            titles.forEach(storage.updateVideoTitle);
-          } else if (title) {
-            storage.updateVideoTitle({
-              videoId,
-              title,
-            });
-          }
+        if (titles) {
+          titles.forEach(storage.updateVideoTitle);
+        } else if (title && videoId) {
+          storage.updateVideoTitle({
+            videoId,
+            title,
+          });
         }
 
         break;

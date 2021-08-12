@@ -32,7 +32,10 @@ browser.contextMenus.create({
 });
 
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (
+  if (info.menuItemId === CONTEXT_OPEN_DOWNLOADS) {
+    openPage('html/index.html');
+    
+  } else if (
     tab &&
     tab.id &&
     tab.url &&
@@ -51,7 +54,7 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
           startDownload({
             tabId,
             videoId,
-            isAudio: info.menuItemId === CONTEXT_DOWNLOAD_VIDEO,
+            isAudio: info.menuItemId === CONTEXT_DOWNLOAD_AUDIO,
           });
         }
         break;
@@ -61,10 +64,6 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
           tabId,
           isCancelRequest: true,
         });
-        break;
-
-      case CONTEXT_OPEN_DOWNLOADS:
-        openPage('html/index.html');
         break;
 
       default:
