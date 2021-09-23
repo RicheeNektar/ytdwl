@@ -1,6 +1,6 @@
 {
   "name": "YTDwl",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Download youtube Audio",
   "manifest_version": 2,
 
@@ -21,7 +21,7 @@
   "content_scripts": [
     {
       "js": ["src/content.js"],
-      "matches": ["*://*.youtube.com/watch?*"]
+      "matches": ["*://*.youtube.com/*"]
     }
   ],
 
