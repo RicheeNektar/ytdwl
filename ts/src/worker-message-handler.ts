@@ -34,7 +34,7 @@ const workerMessageHandler = (event: MessageEvent<YTDwl.WorkerMessage>) => {
       browser.downloads.download(
         {
           url: data.blob,
-          filename: `${title}.x`,
+          filename: `${title}.${download.isAudio ? 'weba' : 'webm'}`,
         },
         downloadId =>
           storage.updateDownload(tabId, { downloadId, status: 'complete' })

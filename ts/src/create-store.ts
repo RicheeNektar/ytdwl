@@ -7,7 +7,7 @@ const createStore = () => {
 
   return {
     updateVideoTitle: ({ videoId, title }: YTDwl.Video) =>
-      (storage.titles[videoId] = title.replace(/[^a-z0-9 !]/gi, '')),
+      (storage.titles[videoId] = title.replaceAll(/[^a-z0-9 !]/gi, '').replaceAll(/  +/g, ' ').trim()),
 
     getTitle: (videoId: string) => storage.titles[videoId],
 
@@ -86,6 +86,6 @@ const createStore = () => {
       return download;
     },
 
-    print: () => console.log(JSON.stringify(storage)),
+    print: () => console.log(storage),
   };
 };

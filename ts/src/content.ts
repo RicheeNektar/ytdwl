@@ -9,6 +9,7 @@ const colors = [
 
 // @ts-ignore
 if (typeof browser === 'undefined') {
+  // @ts-ignore
   var browser = chrome;
 }
 
@@ -17,7 +18,7 @@ const renderStyle = (isAudio: boolean, progress: number) =>
     progress * 100
   }%, ${colors[isDarkMode ? 1 : 0][2]} 0%)`;
 
-browser.runtime.onMessage.addListener(msg => {
+browser.runtime.onMessage.addListener((msg: RuntimeMessage) => {
   const type = msg.type;
 
   if (type === 'update_yt_progress') {
@@ -38,13 +39,7 @@ setInterval(() => {
   let search = window.location.search;
 
   if (search.includes('v=')) {
-    let className =
-      window.location.href.includes('m.youtube') &&
-      !search.includes('app=desktop')
-        ? 'slim-video-metadata-title'
-        : 'title style-scope ytd-video-primary-info-renderer';
-
-    let elements = document.getElementsByClassName(className);
+    let elements = document.querySelectorAll('h1[class="style-scope ytd-watch-metadata"]');
 
     if (elements.length > 0) {
       titleElement = <HTMLElement>elements[0];

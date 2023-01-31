@@ -1,3 +1,4 @@
+// @ts-ignore
 /// <reference types="chrome" />
 declare namespace YTDwl {
   export interface Streams {
@@ -100,5 +101,6 @@ declare namespace YTDwl {
         isRejected: false;
       };
 
+  // @ts-ignore
   export const browser: typeof chrome;
 }
