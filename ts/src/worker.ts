@@ -1,37 +1,45 @@
 const xhr = new XMLHttpRequest();
-const buffer = 1024 * 1024;
+const buffer = 4096;
 
 let streamLink: string | undefined;
 let videoId: string | null;
 let mime: string | null;
 let url: string | null;
-let total: number;
 
-let isFinished = false;
-let isAudio = false;
-let current = 0;
-let tabId = 0;
-let index = 0;
-let blobs: Blob[] = [];
+type memType = {
+  isFinished: boolean;
+  isAudio: boolean;
+  current: number;
+  index: number;
+  tabId: number;
+  total: number;
+  blobs: Blob[];
+};
+
+let mem: memType = {
+  isFinished: false,
+  isAudio: false,
+  current: 0,
+  index: 0,
+  tabId: 0,
+  total: 0,
+  blobs: [],
+};
 
 const reset = () => {
-  streamLink = undefined;
-  videoId = null;
-  mime = null;
-  url = null;
-  isAudio = false;
-  current = 0;
-  index = 0;
-  tabId = 0;
-  total = 0;
-  blobs = [];
+  mem.isAudio = false;
+  mem.current = 0;
+  mem.index = 0;
+  mem.tabId = 0;
+  mem.total = 0;
+  mem.blobs = [];
 };
 
 const sendMessage = (message: YTDwl.WorkerMessageProps) => {
   // @ts-ignore
   postMessage({
     ...message,
-    tabId,
+    tabId: mem.tabId,
   });
 };
 
@@ -50,22 +58,22 @@ xhr.onreadystatechange = async () => {
         });
       }
     } else {
-      blobs[index++] = xhr.response;
-      current += xhr.response.size;
+      mem.blobs[mem.index++] = xhr.response;
+      mem.current += xhr.response.size;
 
       sendMessage({
         status: 'downloading',
-        received: current,
+        received: mem.current,
       });
     }
   }
 };
 
 async function download() {
-  while (current < total) {
+  while (mem.current < mem.total) {
     xhr.open(
       'GET',
-      streamLink + `&range=${current}-${current + buffer}`,
+      streamLink + `&range=${mem.current}-${mem.current + buffer}`,
       false
     );
     xhr.send();
@@ -74,7 +82,7 @@ async function download() {
   if (mime) {
     sendMessage({
       status: 'complete',
-      blob: URL.createObjectURL(new Blob(blobs, { type: mime })),
+      blob: URL.createObjectURL(new Blob(mem.blobs, { type: mime })),
     });
   }
 }
@@ -82,7 +90,7 @@ async function download() {
 const startWorker = () => {
   sendMessage({
     status: 'init',
-    total,
+    total: mem.total,
   });
 
   download();
@@ -100,7 +108,9 @@ onmessage = (event: MessageEvent<YTDwl.WorkerControlMessage>) => {
   if (type === 'init' && audio && video && videoId) {
     reset();
 
-    tabId = dataTabId;
+    mem.tabId = dataTabId;
+    mem.isAudio = isAudio;
+
     streamLink = isAudio ? audio : video;
 
     const mimeMatch = streamLink.match(/&mime=(audio|video)%2F.*?&/);
@@ -115,7 +125,7 @@ onmessage = (event: MessageEvent<YTDwl.WorkerControlMessage>) => {
       const contentLength = streamLink.match(/clen=(\d+)/);
 
       if (!!contentLength) {
-        total = parseInt(contentLength[1]);
+        mem.total = parseInt(contentLength[1]);
         startWorker();
       } else {
         const xhr1 = new XMLHttpRequest();
@@ -125,7 +135,7 @@ onmessage = (event: MessageEvent<YTDwl.WorkerControlMessage>) => {
             const head = xhr1.getResponseHeader('Content-Length');
 
             if (head) {
-              total = parseInt(head);
+              mem.total = parseInt(head);
               startWorker();
             }
           }

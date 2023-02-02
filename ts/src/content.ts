@@ -18,7 +18,7 @@ const renderStyle = (isAudio: boolean, progress: number) =>
     progress * 100
   }%, ${colors[isDarkMode ? 1 : 0][2]} 0%)`;
 
-browser.runtime.onMessage.addListener((msg: RuntimeMessage) => {
+browser.runtime.onMessage.addListener((msg: any) => {
   const type = msg.type;
 
   if (type === 'update_yt_progress') {
@@ -34,7 +34,7 @@ browser.runtime.onMessage.addListener((msg: RuntimeMessage) => {
 const getVideoId = () => new URL(window.location.href).searchParams.get('v');
 
 setInterval(() => {
-  isDarkMode = document.querySelector('html')?.getAttribute('dark') === 'true';
+  isDarkMode = document.querySelector('html')?.getAttribute('dark') !== null;
 
   let search = window.location.search;
 

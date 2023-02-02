@@ -60,7 +60,7 @@ const createStore = () => {
     }: {
       tabId: number;
       videoId?: string;
-      isAudio?: boolean;
+      isAudio: boolean;
     }) => {
       const download = storage.downloads[tabId];
 
@@ -70,7 +70,7 @@ const createStore = () => {
           worker.onmessage = workerMessageHandler;
 
           return (storage.downloads[tabId] = {
-            isAudio: isAudio ?? true,
+            isAudio,
             status: 'complete',
             videoId,
             worker,
@@ -79,6 +79,7 @@ const createStore = () => {
           return (storage.downloads[tabId] = {
             ...download,
             videoId,
+            isAudio
           });
         }
       }

@@ -2,7 +2,7 @@ const workerMessageHandler = (event: MessageEvent<YTDwl.WorkerMessage>) => {
   const data = event.data;
   const tabId = data.tabId;
 
-  const download = storage.getOrCreateDownload({ tabId });
+  const download = storage.getOrCreateDownload({ tabId, isAudio: false });
 
   switch (data.status) {
     case 'init':

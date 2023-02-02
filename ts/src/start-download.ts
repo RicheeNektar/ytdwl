@@ -15,7 +15,7 @@ const startDownload = ({
     storage.cancelDownload(tabId);
 
   } else if (videoId) {
-    const download = storage.getOrCreateDownload({ tabId, videoId, isAudio });
+    const download = storage.getOrCreateDownload({ tabId, videoId, isAudio: isAudio ?? false });
 
     const streams = storage.getStreams(videoId);
     const title = storage.getTitle(videoId);
